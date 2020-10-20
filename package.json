@@ -1,0 +1,14 @@
+{
+  "name": "clis",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "easy-pdf-merge": "^0.2.5",
+    "inquirer": "^7.3.3",
+    "os": "^0.1.1",
+    "path": "^0.12.7",
+    "walk": "^2.3.14"
+  }
+}
