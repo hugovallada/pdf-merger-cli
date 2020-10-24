@@ -1,9 +1,10 @@
 #! /usr/bin/node
 
+import { spawn } from 'child_process';
 import merge from 'easy-pdf-merge';
 import inquirer from 'inquirer';
 import walk from 'walk';
-import { exec, spawn } from 'child_process';
+import path from 'path';
 
 inquirer.prompt([
   {
@@ -35,6 +36,7 @@ inquirer.prompt([
 ]).then(answer => {
 
   let source = [];
+  //TODO: Utilizar o path resolve para aceitar o .
 
   const walker = walk.walk(answer.caminho, {
     followLinks: false,
@@ -62,9 +64,11 @@ inquirer.prompt([
     });
   });
 
-  if(answer.explorer) {
-    spawn('xdg-open',[answer.caminho], {
-      detached: true
-    });
+  if (answer.explorer) {
+    spawn('xdg-open', [answer.caminho], {
+      detached: true,
+      stdio: 'ignore', 
+    }).unref(); // detached: true, stdio:'ignore', .unref() são essenciais para abrir em modo detach
+
   }
 }).catch(err => console.log("Algo aconteceu"))
