@@ -3,6 +3,7 @@
 import merge from 'easy-pdf-merge';
 import inquirer from 'inquirer';
 import walk from 'walk';
+import { exec, spawn } from 'child_process';
 
 inquirer.prompt([
   {
@@ -25,6 +26,11 @@ inquirer.prompt([
     name: "novo",
     type: "input",
     message: "Qual o nome do novo arquivo?",
+  },
+  {
+    name: "explorer",
+    type: "confirm",
+    message: "Deseja abrir o explorer após finalizar o merge ?"
   }
 ]).then(answer => {
 
@@ -55,5 +61,10 @@ inquirer.prompt([
       }
     });
   });
-  
+
+  if(answer.explorer) {
+    spawn('xdg-open',[answer.caminho], {
+      detached: true
+    });
+  }
 }).catch(err => console.log("Algo aconteceu"))
