@@ -15,13 +15,13 @@ inquirer.prompt([
   {
     name: "safety",
     type: "list",
-    message: "Qual o tipo de safety você deseja utilizar?\n(Selecione qualquer opção caso tenha selecionado Não na opção anterior)",
+    message: "Qual o tipo de safety você deseja utilizar?(Ignorar caso não vá utilizar.)",
     choices: ["Merge", "_merged", "merged"]
   },
   {
     name: "caminho",
     type: "input",
-    message: "Qual o diretorio? (Diretório deve finalizar em /)",
+    message: "Qual o diretorio?",
   },
   {
     name: "novo",
@@ -35,10 +35,9 @@ inquirer.prompt([
   }
 ]).then(answer => {
 
-  let source = [];
-  //TODO: Utilizar o path resolve para aceitar o .
+  const source = [];
 
-  const walker = walk.walk(answer.caminho, {
+  const walker = walk.walk(path.resolve(answer.caminho), {
     followLinks: false,
     filters: ["Merge", "merged", "_merged"]
   });
@@ -49,13 +48,20 @@ inquirer.prompt([
         if ((file.name.includes('Merge') || (file.name.includes('merged')) || (file.name.includes('_merged')))) {
           return false;
         } else {
-          source.push(`${answer.caminho}${file.name}`);
+          if (answer.caminho.slice(-1) === '\/') {
+            source.push(`${answer.caminho}${file.name}`);
+          } else {
+            source.push(`${answer.caminho}\/${file.name}`);
+          }
         }
       }
+    });
 
-    })
+    const base = path.resolve(answer.caminho);
+    const novo = `${answer.novo}${answer.mesclar ? answer.safety : ''}.pdf`;
+    const caminho = path.join(base, novo);
 
-    merge(source, `${answer.caminho}${answer.novo}${answer.mesclar ? answer.safety : ''}.pdf`, (err) => {
+    merge(source, caminho, (err) => {
       if (err) {
         return "success";
       } else {
@@ -67,8 +73,8 @@ inquirer.prompt([
   if (answer.explorer) {
     spawn('xdg-open', [answer.caminho], {
       detached: true,
-      stdio: 'ignore', 
+      stdio: 'ignore',
     }).unref(); // detached: true, stdio:'ignore', .unref() são essenciais para abrir em modo detach
 
   }
-}).catch(err => console.log("Algo aconteceu"))
+}).catch(err => console.log(`Algo aconteceu: ${err}`));
