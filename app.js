@@ -36,9 +36,8 @@ inquirer.prompt([
 ]).then(answer => {
 
   let source = [];
-  //TODO: Utilizar o path resolve para aceitar o .
 
-  const walker = walk.walk(answer.caminho, {
+  const walker = walk.walk(path.resolve(answer.caminho), {
     followLinks: false,
     filters: ["Merge", "merged", "_merged"]
   });
@@ -49,13 +48,29 @@ inquirer.prompt([
         if ((file.name.includes('Merge') || (file.name.includes('merged')) || (file.name.includes('_merged')))) {
           return false;
         } else {
-          source.push(`${answer.caminho}${file.name}`);
+          if (answer.caminho[-1] === '/') {
+            source.push(`${answer.caminho}${file.name}`);
+          } else {
+            source.push(`${answer.caminho}\/${file.name}`);
+          }
         }
       }
 
     })
 
-    merge(source, `${answer.caminho}${answer.novo}${answer.mesclar ? answer.safety : ''}.pdf`, (err) => {
+    let base = path.resolve(answer.caminho);
+    const novo = `${answer.novo}${answer.mesclar ? answer.safety : ''}.pdf`;
+    let caminho = path.join(base, novo);
+
+    if (base[-1] !== '\/') {
+      base += '\/'
+    }
+    console.log(path.resolve(`${base}${novo}`));
+    console.log(source);
+
+
+
+    merge(source, `${base}${novo}`, (err) => {
       if (err) {
         return "success";
       } else {
@@ -67,7 +82,7 @@ inquirer.prompt([
   if (answer.explorer) {
     spawn('xdg-open', [answer.caminho], {
       detached: true,
-      stdio: 'ignore', 
+      stdio: 'ignore',
     }).unref(); // detached: true, stdio:'ignore', .unref() são essenciais para abrir em modo detach
 
   }
