@@ -21,7 +21,7 @@ inquirer.prompt([
   {
     name: "caminho",
     type: "input",
-    message: "Qual o diretorio? (Diretório deve finalizar em /)",
+    message: "Qual o diretorio?",
   },
   {
     name: "novo",
@@ -48,29 +48,20 @@ inquirer.prompt([
         if ((file.name.includes('Merge') || (file.name.includes('merged')) || (file.name.includes('_merged')))) {
           return false;
         } else {
-          if (answer.caminho[-1] === '/') {
+          if (answer.caminho.slice(-1) === '\/') {
             source.push(`${answer.caminho}${file.name}`);
           } else {
             source.push(`${answer.caminho}\/${file.name}`);
           }
         }
       }
+    });
 
-    })
-
-    let base = path.resolve(answer.caminho);
+    const base = path.resolve(answer.caminho);
     const novo = `${answer.novo}${answer.mesclar ? answer.safety : ''}.pdf`;
-    let caminho = path.join(base, novo);
+    const caminho = path.join(base, novo);
 
-    if (base[-1] !== '\/') {
-      base += '\/'
-    }
-    console.log(path.resolve(`${base}${novo}`));
-    console.log(source);
-
-
-
-    merge(source, `${base}${novo}`, (err) => {
+    merge(source, caminho, (err) => {
       if (err) {
         return "success";
       } else {
@@ -86,4 +77,4 @@ inquirer.prompt([
     }).unref(); // detached: true, stdio:'ignore', .unref() são essenciais para abrir em modo detach
 
   }
-}).catch(err => console.log("Algo aconteceu"))
+}).catch(err => console.log("Algo aconteceu"));
