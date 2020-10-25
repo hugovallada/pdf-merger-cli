@@ -15,7 +15,7 @@ inquirer.prompt([
   {
     name: "safety",
     type: "list",
-    message: "Qual o tipo de safety você deseja utilizar?\n(Selecione qualquer opção caso tenha selecionado Não na opção anterior)",
+    message: "Qual o tipo de safety você deseja utilizar?(Ignorar caso não vá utilizar.)",
     choices: ["Merge", "_merged", "merged"]
   },
   {
@@ -35,7 +35,7 @@ inquirer.prompt([
   }
 ]).then(answer => {
 
-  let source = [];
+  const source = [];
 
   const walker = walk.walk(path.resolve(answer.caminho), {
     followLinks: false,
@@ -77,4 +77,4 @@ inquirer.prompt([
     }).unref(); // detached: true, stdio:'ignore', .unref() são essenciais para abrir em modo detach
 
   }
-}).catch(err => console.log("Algo aconteceu"));
+}).catch(err => console.log(`Algo aconteceu: ${err}`));
