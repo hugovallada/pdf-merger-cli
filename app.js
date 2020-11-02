@@ -61,13 +61,7 @@ inquirer.prompt([
     const novo = `${answer.novo}${answer.mesclar ? answer.safety : ''}.pdf`;
     const caminho = path.join(base, novo);
 
-    merge(source, caminho, (err) => {
-      if (err) {
-        return "success";
-      } else {
-        return "fail";
-      }
-    });
+    merge(source, caminho, err => err ? true : false)
   });
 
   if (answer.explorer) {
