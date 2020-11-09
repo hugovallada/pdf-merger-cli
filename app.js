@@ -1,5 +1,3 @@
-#! /usr/bin/node
-
 import { spawn } from 'child_process';
 import merge from 'easy-pdf-merge';
 import inquirer from 'inquirer';
