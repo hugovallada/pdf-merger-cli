@@ -14,7 +14,8 @@ inquirer.prompt([
     name: "safety",
     type: "list",
     message: "Qual o tipo de safety você deseja utilizar?(Ignorar caso não vá utilizar.)",
-    choices: ["Merge", "_merged", "merged"]
+    choices: ["Merge", "_merged", "merged"],
+    when: (answer) => answer.mesclar,
   },
   {
     name: "caminho",
