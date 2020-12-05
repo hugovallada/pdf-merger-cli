@@ -4,7 +4,7 @@ import inquirer from 'inquirer';
 import walk from 'walk';
 import path from 'path';
 
-console.log("Bem vindo ao PdfMerger.Versão atual 2.0RC1\n");
+console.log("Bem vindo ao PdfMerger.Versão atual 1.1\n");
 
 inquirer.prompt([
   {
